@@ -1,0 +1,12 @@
+export const setToken = (token) => localStorage.setItem('token', token)
+export const getToken = () => localStorage.getItem('token')
+export const removeToken = () => localStorage.removeItem('token')
+
+export const setUsername = (username) => localStorage.setItem('username', username)
+export const getUsername = () => localStorage.getItem('username')
+export const removeUsername = () => localStorage.removeItem('username')
+
+export const logout = () => {
+  removeToken()
+  removeUsername()
+}
