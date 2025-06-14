@@ -1,55 +1,44 @@
 import { useState } from 'react'
-import { getToken, getUsername } from '../utils/storage'
+import { getToken } from '../utils/storage'
 
 const DeleteUserForm = () => {
   const [legajo, setLegajo] = useState('')
   const [mensaje, setMensaje] = useState('')
 
-  const handleDelete = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (getUsername() !== 'GUSTAVOPERALTA') {
-      setMensaje('❌ Solo el administrador puede eliminar usuarios.')
-      return
-    }
-
+    setMensaje('')
     try {
-      const res = await fetch(`http://localhost:5000/api/users/delete?legajo=${legajo}`, {
+      const response = await fetch(`https://police-backend-dwup.onrender.com/api/users/${legajo}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${getToken()}`
         }
       })
 
-      const data = await res.json()
-      if (res.ok) {
-        setMensaje('✅ Usuario eliminado correctamente.')
-      } else {
-        setMensaje(`❌ ${data.msg || 'Error al eliminar usuario.'}`)
-      }
-    } catch {
-      setMensaje('❌ Error de conexión con el servidor.')
+      if (!response.ok) throw new Error('Error al eliminar usuario')
+      setMensaje('Usuario eliminado correctamente')
+      setLegajo('')
+    } catch (err) {
+      setMensaje(err.message)
     }
   }
 
   return (
-    <form onSubmit={handleDelete} className="bg-white p-6 rounded shadow-md max-w-md mx-auto my-10">
-      <h2 className="text-xl font-bold text-center mb-4">Eliminar Usuario por Legajo</h2>
-
-      {mensaje && <p className="text-center text-sm text-red-600 mb-4">{mensaje}</p>}
-
+    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow">
+      <h2 className="text-lg font-bold mb-2">Eliminar usuario por legajo</h2>
       <input
         type="text"
-        placeholder="Número de legajo"
+        placeholder="Legajo"
         value={legajo}
         onChange={(e) => setLegajo(e.target.value.toUpperCase())}
+        className="p-2 border rounded w-full"
         required
-        className="w-full mb-3 p-2 border rounded"
       />
-
-      <button type="submit" className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">
-        Eliminar Usuario
+      <button type="submit" className="mt-4 bg-red-500 text-white px-4 py-2 rounded">
+        Eliminar usuario
       </button>
+      {mensaje && <p className="mt-2">{mensaje}</p>}
     </form>
   )
 }

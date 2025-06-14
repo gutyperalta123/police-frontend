@@ -1,14 +1,14 @@
-import { logout } from '../utils/storage'
+import { clearSession } from '../utils/storage'
 
-const LogoutButton = ({ onLogout }) => {
-  const handleClick = () => {
-    logout()
-    onLogout()
+const LogoutButton = () => {
+  const handleLogout = () => {
+    clearSession()
+    window.location.reload()
   }
 
   return (
-    <button onClick={handleClick} className="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700">
-      Cerrar Sesión
+    <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded">
+      Cerrar sesión
     </button>
   )
 }

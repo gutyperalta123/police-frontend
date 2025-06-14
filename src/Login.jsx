@@ -1,49 +1,67 @@
 import { useState } from 'react'
-import { setToken, setUsername } from './utils/storage'
+import { setSession } from './utils/storage'
 
-const Login = ({ onLogin }) => {
-  const [username, setUser] = useState('')
-  const [password, setPass] = useState('')
+function Login() {
+  const [form, setForm] = useState({ username: '', password: '' })
   const [error, setError] = useState('')
 
-  const handleLogin = async (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setForm({ ...form, [name]: value })
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('')
 
     try {
-      const res = await fetch('https://police-backend-dwup.onrender.com/api/users/login', {
+      const response = await fetch('https://police-backend-dwup.onrender.com/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify(form)
       })
 
-      const data = await res.json()
-      if (res.ok) {
-        setToken(data.token)
-        setUsername(data.username)
-        onLogin(data.username)
-      } else {
-        setError(data.msg || 'Credenciales inválidas')
+      if (!response.ok) {
+        throw new Error('Credenciales inválidas')
       }
-    } catch {
-      setError('Error de conexión con el servidor')
+
+      const data = await response.json()
+      setSession(data.token, data.username)
+      window.location.reload()
+    } catch (err) {
+      setError(err.message)
     }
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Ingreso a la Aplicación</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-200">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4">Iniciar sesión</h2>
 
-        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
-        <input type="text" placeholder="Usuario" className="w-full mb-4 p-2 border rounded"
-          value={username} onChange={e => setUser(e.target.value.toUpperCase())} required />
+        <input
+          type="text"
+          name="username"
+          placeholder="Usuario"
+          value={form.username}
+          onChange={handleChange}
+          className="w-full mb-4 px-4 py-2 border rounded"
+          required
+        />
 
-        <input type="password" placeholder="Contraseña" className="w-full mb-4 p-2 border rounded"
-          value={password} onChange={e => setPass(e.target.value)} required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Contraseña"
+          value={form.password}
+          onChange={handleChange}
+          className="w-full mb-4 px-4 py-2 border rounded"
+          required
+        />
 
-        <button className="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded">
-          Ingresar
+        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
+          Entrar
         </button>
       </form>
     </div>

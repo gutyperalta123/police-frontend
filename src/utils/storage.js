@@ -1,12 +1,17 @@
-export const setToken = (token) => localStorage.setItem('token', token)
-export const getToken = () => localStorage.getItem('token')
-export const removeToken = () => localStorage.removeItem('token')
+export const setSession = (token, username) => {
+  localStorage.setItem('token', token)
+  localStorage.setItem('username', username)
+}
 
-export const setUsername = (username) => localStorage.setItem('username', username)
-export const getUsername = () => localStorage.getItem('username')
-export const removeUsername = () => localStorage.removeItem('username')
+export const getToken = () => {
+  return localStorage.getItem('token')
+}
 
-export const logout = () => {
-  removeToken()
-  removeUsername()
+export const getUsername = () => {
+  return localStorage.getItem('username')
+}
+
+export const clearSession = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('username')
 }

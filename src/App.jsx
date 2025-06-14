@@ -1,67 +1,51 @@
-import { useState, useEffect } from 'react'
-import { getToken, getUsername } from './utils/storage'
+import { useState } from 'react'
 import Login from './Login'
-import LogoutButton from './components/LogoutButton'
 import AddObjectView from './views/AddObjectView'
 import SearchObjectView from './views/SearchObjectView'
-import CreateUserForm from './components/CreateUserForm'
-import DeleteUserView from './views/DeleteUserView'
+import AdminPanelView from './views/AdminPanelView'
+import { getToken, getUsername, clearSession } from './utils/storage'
 
-const App = () => {
-  const [usuario, setUsuario] = useState(null)
-  const [vista, setVista] = useState('add')
+function App() {
+  const [view, setView] = useState('add')
+  const token = getToken()
+  const username = getUsername()
 
-  useEffect(() => {
-    const token = getToken()
-    const user = getUsername()
-    if (token && user) {
-      setUsuario(user)
-    }
-  }, [])
+  const handleLogout = () => {
+    clearSession()
+    window.location.reload()
+  }
 
-  if (!usuario) return <Login onLogin={setUsuario} />
+  if (!token) return <Login />
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex justify-between items-center p-4 bg-white shadow">
-        <h1 className="text-xl font-bold">Aplicación Policial</h1>
-        <div className="flex gap-2">
-          <button
-            onClick={() => setVista('add')}
-            className={`px-4 py-2 rounded ${vista === 'add' ? 'bg-black text-white' : 'bg-gray-200'}`}
-          >
-            Agregar Objeto
+    <div className="min-h-screen bg-gray-100 p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold">APLICACIÓN POLICIAL</h1>
+        <div>
+          <span className="mr-4 font-semibold">{username}</span>
+          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
+            Cerrar sesión
           </button>
-          <button
-            onClick={() => setVista('search')}
-            className={`px-4 py-2 rounded ${vista === 'search' ? 'bg-black text-white' : 'bg-gray-200'}`}
-          >
-            Buscar/Eliminar
-          </button>
-          {usuario === 'GUSTAVOPERALTA' && (
-            <>
-              <button
-                onClick={() => setVista('create')}
-                className={`px-4 py-2 rounded ${vista === 'create' ? 'bg-black text-white' : 'bg-gray-200'}`}
-              >
-                Crear Usuario
-              </button>
-              <button
-                onClick={() => setVista('deleteUser')}
-                className={`px-4 py-2 rounded ${vista === 'deleteUser' ? 'bg-black text-white' : 'bg-gray-200'}`}
-              >
-                Eliminar Usuario
-              </button>
-            </>
-          )}
-          <LogoutButton onLogout={() => setUsuario(null)} />
         </div>
       </div>
 
-      {vista === 'add' && <AddObjectView />}
-      {vista === 'search' && <SearchObjectView />}
-      {vista === 'create' && usuario === 'GUSTAVOPERALTA' && <CreateUserForm />}
-      {vista === 'deleteUser' && usuario === 'GUSTAVOPERALTA' && <DeleteUserView />}
+      <div className="flex space-x-4 mb-4">
+        <button onClick={() => setView('add')} className="bg-blue-500 text-white px-4 py-2 rounded">
+          Agregar objeto
+        </button>
+        <button onClick={() => setView('search')} className="bg-green-500 text-white px-4 py-2 rounded">
+          Buscar / Eliminar
+        </button>
+        {username === 'GUSTAVOPERALTA' && (
+          <button onClick={() => setView('admin')} className="bg-purple-500 text-white px-4 py-2 rounded">
+            Administrar usuarios
+          </button>
+        )}
+      </div>
+
+      {view === 'add' && <AddObjectView />}
+      {view === 'search' && <SearchObjectView />}
+      {view === 'admin' && <AdminPanelView />}
     </div>
   )
 }

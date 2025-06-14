@@ -1,12 +1,11 @@
-import React from 'react';
-import AddObjectForm from '../components/AddObjectForm';
+import AddObjectForm from '../components/AddObjectForm'
 
-const AddObjectView = ({ onAddObject }) => {
+const AddObjectView = () => {
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <AddObjectForm onAddObject={onAddObject} />
+    <div>
+      <AddObjectForm />
     </div>
-  );
-};
+  )
+}
 
-export default AddObjectView;
+export default AddObjectView
