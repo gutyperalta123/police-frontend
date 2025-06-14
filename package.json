@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.jsx",
   "scripts": {
-  "dev": "node_modules/.bin/vite",
-  "build": "node_modules/.bin/vite build",
-  "preview": "node_modules/.bin/vite preview"
-}
-,
+  "dev": "vite",
+  "build": "npx vite build",
+  "preview": "vite preview"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
