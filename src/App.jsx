@@ -1,51 +1,71 @@
-import { useState } from 'react'
+// frontend/src/App.jsx
+import { useEffect, useState } from 'react'
 import Login from './Login'
-import AddObjectView from './views/AddObjectView'
-import SearchObjectView from './views/SearchObjectView'
-import AdminPanelView from './views/AdminPanelView'
-import { getToken, getUsername, clearSession } from './utils/storage'
+import AddObjectForm from './components/AddObjectForm'
+import SearchObjectForm from './components/SearchObjectForm'
+import SearchObjectResults from './components/SearchObjectResults'
+import CreateUserForm from './components/CreateUserForm'
+import DeleteUserForm from './components/DeleteUserForm'
+import { getToken, clearToken } from './utils/storage'
 
 function App() {
-  const [view, setView] = useState('add')
-  const token = getToken()
-  const username = getUsername()
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken())
+  const [role, setRole] = useState('')
+  const [results, setResults] = useState([])
 
   const handleLogout = () => {
-    clearSession()
-    window.location.reload()
+    clearToken()
+    setIsAuthenticated(false)
+    setRole('')
   }
 
-  if (!token) return <Login />
+  const handleLogin = (userRole) => {
+    setIsAuthenticated(true)
+    setRole(userRole)
+  }
+
+  const handleDeleteResult = (id) => {
+    setResults((prev) => prev.filter((item) => item._id !== id))
+  }
+
+  useEffect(() => {
+    if (!getToken()) {
+      setIsAuthenticated(false)
+    }
+  }, [])
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="p-4 bg-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">APLICACIÓN POLICIAL</h1>
+        <h1 className="text-2xl font-bold">Aplicación Policial</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
+        >
+          Cerrar sesión
+        </button>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <span className="mr-4 font-semibold">{username}</span>
-          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
-            Cerrar sesión
-          </button>
+          <AddObjectForm />
+        </div>
+        <div>
+          <SearchObjectForm onResults={setResults} />
+          <SearchObjectResults results={results} onDelete={handleDeleteResult} />
         </div>
       </div>
 
-      <div className="flex space-x-4 mb-4">
-        <button onClick={() => setView('add')} className="bg-blue-500 text-white px-4 py-2 rounded">
-          Agregar objeto
-        </button>
-        <button onClick={() => setView('search')} className="bg-green-500 text-white px-4 py-2 rounded">
-          Buscar / Eliminar
-        </button>
-        {username === 'GUSTAVOPERALTA' && (
-          <button onClick={() => setView('admin')} className="bg-purple-500 text-white px-4 py-2 rounded">
-            Administrar usuarios
-          </button>
-        )}
-      </div>
-
-      {view === 'add' && <AddObjectView />}
-      {view === 'search' && <SearchObjectView />}
-      {view === 'admin' && <AdminPanelView />}
+      {role === 'admin' && (
+        <div className="mt-8 grid md:grid-cols-2 gap-4">
+          <CreateUserForm />
+          <DeleteUserForm />
+        </div>
+      )}
     </div>
   )
 }

@@ -1,5 +1,6 @@
+// frontend/src/components/AddObjectForm.jsx
 import { useState } from 'react'
-import { getToken } from '../utils/storage'
+import { getToken, API_URL } from '../utils/storage'
 
 const AddObjectForm = () => {
   const [mensaje, setMensaje] = useState('')
@@ -28,9 +29,9 @@ const AddObjectForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setMensaje('')
+
     try {
-      const response = await fetch('https://police-backend-dwup.onrender.com/api/objects', {
+      const res = await fetch(`${API_URL}/api/objects`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,8 +39,12 @@ const AddObjectForm = () => {
         },
         body: JSON.stringify(form)
       })
-      if (!response.ok) throw new Error('Error al registrar')
-      setMensaje('Registro exitoso')
+
+      if (!res.ok) {
+        throw new Error('Error al guardar el objeto')
+      }
+
+      setMensaje('Objeto guardado con éxito')
       setForm({
         comisaria: '',
         tipo: '',
@@ -58,31 +63,29 @@ const AddObjectForm = () => {
         descripcion: ''
       })
     } catch (err) {
-      setMensaje(err.message)
+      setMensaje('No se pudo guardar el objeto')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow">
-      <h2 className="text-xl font-bold mb-4">Agregar Objeto</h2>
-      <div className="grid grid-cols-2 gap-4">
-        {Object.keys(form).map((key) => (
-          <input
-            key={key}
-            type="text"
-            name={key}
-            placeholder={key.replaceAll('_', ' ').toUpperCase()}
-            value={form[key]}
-            onChange={handleChange}
-            className="p-2 border rounded"
-            required
-          />
-        ))}
-      </div>
-      <button type="submit" className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-        Registrar
+    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">
+      <h2 className="text-lg font-bold mb-2">Registrar Objeto</h2>
+      {Object.keys(form).map((key) => (
+        <input
+          key={key}
+          type="text"
+          name={key}
+          value={form[key]}
+          placeholder={key.replace(/_/g, ' ').toUpperCase()}
+          onChange={handleChange}
+          className="w-full mb-2 p-2 border rounded"
+          required
+        />
+      ))}
+      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Guardar
       </button>
-      {mensaje && <p className="mt-2">{mensaje}</p>}
+      {mensaje && <p className="mt-2 text-sm">{mensaje}</p>}
     </form>
   )
 }

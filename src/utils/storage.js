@@ -1,17 +1,14 @@
-export const setSession = (token, username) => {
-  localStorage.setItem('token', token)
-  localStorage.setItem('username', username)
-}
+// frontend/src/utils/storage.js
+export const API_URL = 'https://police-backend-dwup.onrender.com';
 
 export const getToken = () => {
-  return localStorage.getItem('token')
-}
+  return localStorage.getItem('token');
+};
 
-export const getUsername = () => {
-  return localStorage.getItem('username')
-}
+export const setToken = (token) => {
+  localStorage.setItem('token', token);
+};
 
-export const clearSession = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('username')
-}
+export const clearToken = () => {
+  localStorage.removeItem('token');
+};
