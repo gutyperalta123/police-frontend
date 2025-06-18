@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import SearchObjectForm from './components/SearchObjectForm'
-import SearchResults from './components/SearchResults'
+import SearchObjectForm from '../components/SearchObjectForm.jsx'
+import SearchResults from '../components/SearchResults.jsx'
 
 const SearchObjectView = () => {
   const [results, setResults] = useState([])

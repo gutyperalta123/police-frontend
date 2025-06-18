@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Login from './Login'
-import AddObjectView from "./views/AddObjectView"
+import AddObjectView from './views/AddObjectView.jsx'
 import SearchObjectView from "./views/SearchObjectView"
-import AdminPanelView from "./views/AdminPanelView"
+import AdminPanelView from './views/AdminPanelView.jsx'
 import DeleteUserView from "./views/DeleteUserView"
 import { getToken, getUsername } from './utils/storage'
 
