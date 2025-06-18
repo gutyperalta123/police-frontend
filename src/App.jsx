@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Login from './Login'
-import AddObjectView from './AddObjectView'
-import SearchObjectView from './SearchObjectView'
-import AdminPanelView from './AdminPanelView'
+import AddObjectView from "./views/AddObjectView"
+import SearchObjectView from "./views/SearchObjectView"
+import AdminPanelView from "./views/AdminPanelView"
+import DeleteUserView from "./views/DeleteUserView"
 import { getToken, getUsername } from './utils/storage'
 
 const App = () => {
