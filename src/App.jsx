@@ -1,71 +1,66 @@
-// frontend/src/App.jsx
-import { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Login from './Login'
-import AddObjectForm from './components/AddObjectForm'
-import SearchObjectForm from './components/SearchObjectForm'
-import SearchObjectResults from './components/SearchObjectResults'
-import CreateUserForm from './components/CreateUserForm'
-import DeleteUserForm from './components/DeleteUserForm'
-import { getToken, clearToken } from './utils/storage'
+import AddObjectView from './AddObjectView'
+import SearchObjectView from './SearchObjectView'
+import AdminPanelView from './AdminPanelView'
+import { getToken, getUsername } from './utils/storage'
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken())
-  const [role, setRole] = useState('')
-  const [results, setResults] = useState([])
+const App = () => {
+  const [token, setToken] = useState(getToken())
+  const [username, setUsername] = useState(getUsername())
+  const [vista, setVista] = useState('agregar')
 
-  const handleLogout = () => {
-    clearToken()
-    setIsAuthenticated(false)
-    setRole('')
-  }
-
-  const handleLogin = (userRole) => {
-    setIsAuthenticated(true)
-    setRole(userRole)
-  }
-
-  const handleDeleteResult = (id) => {
-    setResults((prev) => prev.filter((item) => item._id !== id))
-  }
+  const isAdmin = username === 'GUSTAVOPERALTA'
 
   useEffect(() => {
-    if (!getToken()) {
-      setIsAuthenticated(false)
-    }
+    setToken(getToken())
+    setUsername(getUsername())
   }, [])
 
-  if (!isAuthenticated) {
-    return <Login onLogin={handleLogin} />
-  }
+  if (!token) return <Login onLogin={setToken} />
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
+    <div className="min-h-screen bg-gray-100 p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Aplicación Policial</h1>
+        <h1 className="text-xl font-bold">APLICACIÓN POLICIAL</h1>
+        <p className="font-semibold">{username}</p>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-4">
         <button
-          onClick={handleLogout}
-          className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          onClick={() => setVista('agregar')}
+        >
+          Agregar objeto
+        </button>
+        <button
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          onClick={() => setVista('buscar')}
+        >
+          Buscar / Eliminar
+        </button>
+        {isAdmin && (
+          <button
+            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+            onClick={() => setVista('admin')}
+          >
+            Administrar usuarios
+          </button>
+        )}
+        <button
+          onClick={() => {
+            localStorage.clear()
+            window.location.reload()
+          }}
+          className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Cerrar sesión
         </button>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <div>
-          <AddObjectForm />
-        </div>
-        <div>
-          <SearchObjectForm onResults={setResults} />
-          <SearchObjectResults results={results} onDelete={handleDeleteResult} />
-        </div>
-      </div>
-
-      {role === 'admin' && (
-        <div className="mt-8 grid md:grid-cols-2 gap-4">
-          <CreateUserForm />
-          <DeleteUserForm />
-        </div>
-      )}
+      {vista === 'agregar' && <AddObjectView />}
+      {vista === 'buscar' && <SearchObjectView />}
+      {vista === 'admin' && isAdmin && <AdminPanelView />}
     </div>
   )
 }

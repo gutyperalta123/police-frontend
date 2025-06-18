@@ -1,49 +1,49 @@
-import { useState } from 'react'
-import { getToken } from '../utils/storage'
+import React, { useState } from 'react'
 
 const SearchDeleteUser = () => {
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState([])
-  const [mensaje, setMensaje] = useState('')
+  const [legajo, setLegajo] = useState('')
+  const [resultado, setResultado] = useState(null)
+  const [error, setError] = useState('')
 
   const handleSearch = async () => {
-    setMensaje('')
     try {
-      const response = await fetch(`https://police-backend-dwup.onrender.com/api/users/buscar?query=${query}`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`
-        }
-      })
-      const data = await response.json()
-      setResults(data)
+      const res = await fetch(`https://police-backend-dwup.onrender.com/api/users/${legajo}`)
+
+      if (res.ok) {
+        const data = await res.json()
+        setResultado(data)
+        setError('')
+      } else {
+        setResultado(null)
+        setError('Usuario no encontrado')
+      }
     } catch (err) {
-      setMensaje('Error al buscar')
+      setError('Error al buscar')
     }
   }
 
   return (
-    <div className="bg-white p-4 rounded shadow">
-      <h2 className="text-lg font-bold mb-2">Buscar usuarios</h2>
-      <div className="flex space-x-2 mb-2">
-        <input
-          type="text"
-          placeholder="Buscar por nombre o legajo"
-          value={query}
-          onChange={(e) => setQuery(e.target.value.toUpperCase())}
-          className="p-2 border rounded w-full"
-        />
-        <button onClick={handleSearch} className="bg-blue-500 text-white px-4 py-2 rounded">
-          Buscar
-        </button>
-      </div>
-      {mensaje && <p>{mensaje}</p>}
-      <ul className="space-y-2">
-        {results.map((user) => (
-          <li key={user._id} className="border p-2 rounded">
-            {user.username} - {user.legajo}
-          </li>
-        ))}
-      </ul>
+    <div className="space-y-2">
+      <input
+        type="text"
+        placeholder="Buscar usuario por legajo"
+        value={legajo}
+        onChange={e => setLegajo(e.target.value)}
+        className="border p-2 rounded w-full"
+      />
+      <button
+        onClick={handleSearch}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Buscar
+      </button>
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      {resultado && (
+        <div className="mt-2 p-2 border rounded bg-gray-50">
+          <p><strong>Usuario:</strong> {resultado.username}</p>
+          <p><strong>Legajo:</strong> {resultado.legajo}</p>
+        </div>
+      )}
     </div>
   )
 }

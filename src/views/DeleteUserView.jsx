@@ -1,8 +1,10 @@
-import DeleteUserForm from '../components/DeleteUserForm'
+import React from 'react'
+import DeleteUserForm from './components/DeleteUserForm'
 
 const DeleteUserView = () => {
   return (
-    <div>
+    <div className="max-w-xl mx-auto">
+      <h2 className="text-xl font-bold mb-4">Eliminar usuario</h2>
       <DeleteUserForm />
     </div>
   )

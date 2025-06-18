@@ -1,48 +1,30 @@
-// frontend/src/components/SearchObjectForm.jsx
-import { useState } from 'react'
-import { API_URL, getToken } from '../utils/storage'
+import React, { useState } from 'react'
 
-const SearchObjectForm = ({ onResults }) => {
-  const [search, setSearch] = useState('')
-  const [mensaje, setMensaje] = useState('')
+const SearchObjectForm = ({ onSearch }) => {
+  const [query, setQuery] = useState('')
 
-  const handleSearch = async (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
-
-    try {
-      const res = await fetch(`${API_URL}/api/objects/search?query=${search.toUpperCase()}`, {
-        headers: {
-          Authorization: `Bearer ${getToken()}`
-        }
-      })
-
-      if (!res.ok) {
-        throw new Error('Error al buscar')
-      }
-
-      const data = await res.json()
-      onResults(data)
-      setMensaje('')
-    } catch (err) {
-      setMensaje('No se encontraron resultados o hubo un error')
-      onResults([])
+    if (query.trim()) {
+      onSearch(query.trim().toUpperCase())
     }
   }
 
   return (
-    <form onSubmit={handleSearch} className="mb-4">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
       <input
         type="text"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Buscar por cualquier campo..."
-        className="p-2 border rounded w-full"
-        required
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        placeholder="Buscar por tipo, número de serie, IMEI, dominio o DNI"
+        className="p-2 border border-gray-300 rounded w-full sm:w-3/4"
       />
-      <button type="submit" className="mt-2 w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+      <button
+        type="submit"
+        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
         Buscar
       </button>
-      {mensaje && <p className="mt-2 text-sm text-red-500">{mensaje}</p>}
     </form>
   )
 }

@@ -1,73 +1,68 @@
-// frontend/src/components/CreateUserForm.jsx
-import { useState } from 'react'
-import { API_URL, getToken } from '../utils/storage'
+import React, { useState } from 'react'
 
 const CreateUserForm = () => {
-  const [form, setForm] = useState({ username: '', password: '', legajo: '' })
+  const [username, setUsername] = useState('')
+  const [legajo, setLegajo] = useState('')
+  const [password, setPassword] = useState('')
   const [mensaje, setMensaje] = useState('')
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value.toUpperCase() }))
-  }
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault()
+
     try {
-      const res = await fetch(`${API_URL}/api/users`, {
+      const res = await fetch('https://police-backend-dwup.onrender.com/api/users/create', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`
-        },
-        body: JSON.stringify(form)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: username.toUpperCase(),
+          legajo,
+          password
+        })
       })
 
-      if (!res.ok) {
-        throw new Error('No se pudo crear el usuario')
+      if (res.ok) {
+        setMensaje('Usuario creado correctamente')
+        setUsername('')
+        setLegajo('')
+        setPassword('')
+      } else {
+        setMensaje('Error al crear usuario')
       }
-
-      setMensaje('Usuario creado con éxito')
-      setForm({ username: '', password: '', legajo: '' })
     } catch (err) {
-      setMensaje('Error al crear usuario')
+      setMensaje('Error de conexión')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">
-      <h2 className="text-lg font-bold mb-2">Crear Usuario</h2>
+    <form onSubmit={handleSubmit} className="space-y-2">
       <input
         type="text"
-        name="username"
-        placeholder="Usuario"
-        value={form.username}
-        onChange={handleChange}
-        className="w-full mb-2 p-2 border rounded"
+        placeholder="Nombre de usuario"
+        value={username}
+        onChange={e => setUsername(e.target.value)}
+        className="border p-2 rounded w-full"
+        required
+      />
+      <input
+        type="text"
+        placeholder="Legajo"
+        value={legajo}
+        onChange={e => setLegajo(e.target.value)}
+        className="border p-2 rounded w-full"
         required
       />
       <input
         type="password"
-        name="password"
         placeholder="Contraseña"
-        value={form.password}
-        onChange={(e) => setForm(prev => ({ ...prev, password: e.target.value }))}
-        className="w-full mb-2 p-2 border rounded"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        className="border p-2 rounded w-full"
         required
       />
-      <input
-        type="text"
-        name="legajo"
-        placeholder="Legajo"
-        value={form.legajo}
-        onChange={handleChange}
-        className="w-full mb-2 p-2 border rounded"
-        required
-      />
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-        Crear
+      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Crear usuario
       </button>
-      {mensaje && <p className="mt-2 text-sm">{mensaje}</p>}
+      {mensaje && <p className="text-sm text-red-600">{mensaje}</p>}
     </form>
   )
 }
