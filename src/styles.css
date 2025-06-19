@@ -1,14 +1,5 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f3f4f6;
-  color: #111827;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-button {
-  transition: background-color 0.3s ease;
-}
 
-input {
-  outline: none;
-}

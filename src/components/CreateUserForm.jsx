@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { getToken, API_URL } from '../utils/storage'
 
 const CreateUserForm = () => {
   const [username, setUsername] = useState('')
@@ -10,7 +10,8 @@ const CreateUserForm = () => {
     e.preventDefault()
 
     try {
-      const res = await fetch('https://police-backend-dwup.onrender.com/api/users/create', {
+      const res = await fetch(`${API_URL}/api/users/create`, {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
