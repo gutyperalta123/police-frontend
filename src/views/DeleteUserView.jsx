@@ -1,5 +1,5 @@
 import React from 'react'
-import DeleteUserForm from './components/DeleteUserForm'
+import DeleteUserForm from './components/DeleteUserForm.jsx'
 
 const DeleteUserView = () => {
   return (

@@ -1,4 +1,4 @@
-import AddObjectForm from '../components/AddObjectForm'
+import AddObjectForm from '../components/AddObjectForm.jsx'
 
 const AddObjectView = () => {
   return (
