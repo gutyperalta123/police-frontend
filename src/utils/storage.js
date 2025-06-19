@@ -6,3 +6,4 @@ export const getUsername = () => localStorage.getItem('username')
 
 
 
+export const API_URL = 'https://police-backend-dwup.onrender.com'
