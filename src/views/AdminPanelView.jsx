@@ -1,7 +1,8 @@
 import React from 'react'
-import CreateUserForm from './components/CreateUserForm'
-import DeleteUserForm from './components/DeleteUserForm'
-import SearchDeleteUser from './components/SearchDeleteUser'
+import CreateUserForm from '../components/CreateUserForm.jsx'
+import DeleteUserForm from '../components/DeleteUserForm.jsx'
+import SearchDeleteUser from '../components/SearchDeleteUser.jsx'
+
 
 const AdminPanelView = () => {
   return (
