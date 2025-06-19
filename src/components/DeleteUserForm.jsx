@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { API_URL } from '../utils/storage'
+
 
 const DeleteUserForm = () => {
   const [legajo, setLegajo] = useState('')
@@ -6,7 +8,7 @@ const DeleteUserForm = () => {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`https://police-backend-dwup.onrender.com/api/users/${legajo}`, {
+      const res = await fetch(`${API_URL}/api/users/${legajo}`, {
         method: 'DELETE'
       })
 

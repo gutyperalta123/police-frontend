@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { API_URL } from '../utils/storage'
 
 const SearchDeleteUser = () => {
   const [legajo, setLegajo] = useState('')
@@ -7,7 +8,7 @@ const SearchDeleteUser = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await fetch(`https://police-backend-dwup.onrender.com/api/users/${legajo}`)
+      const res = await fetch(`${API_URL}/api/users/${legajo}`)
 
       if (res.ok) {
         const data = await res.json()
