@@ -1,5 +1,7 @@
 // src/utils/storage.js
 
+export const API_URL = 'https://police-backend-dwup.onrender.com'
+
 export const saveToken = token => {
   localStorage.setItem('token', token)
 }
