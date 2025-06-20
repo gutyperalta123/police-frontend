@@ -1,29 +1,26 @@
+// src/components/SearchObjectForm.jsx
 import React, { useState } from 'react'
-import { API_URL } from '../utils/storage'
 
 const SearchObjectForm = ({ onSearch }) => {
   const [query, setQuery] = useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
-    if (query.trim()) {
-      onSearch(query.trim().toUpperCase())
+    if (query.trim() !== '') {
+      onSearch(query.toUpperCase())
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
+    <form onSubmit={handleSubmit} className="flex flex-col md:flex-row gap-4 mb-6">
       <input
         type="text"
+        placeholder="Buscar por IMEI, dominio, motor, cuadro o DNI"
         value={query}
         onChange={e => setQuery(e.target.value)}
-        placeholder="Buscar por tipo, número de serie, IMEI, dominio o DNI"
-        className="p-2 border border-gray-300 rounded w-full sm:w-3/4"
+        className="border border-gray-300 rounded px-4 py-2 w-full"
       />
-      <button
-        type="submit"
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
+      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
         Buscar
       </button>
     </form>

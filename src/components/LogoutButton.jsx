@@ -1,16 +1,19 @@
-import React, { useState } from 'react'
+// src/components/LogoutButton.jsx
+import React from 'react'
+import { clearStorage } from '../utils/storage'
 
-import { clearSession } from '../utils/storage'
-
-const LogoutButton = () => {
+const LogoutButton = ({ onLogout }) => {
   const handleLogout = () => {
-    clearSession()
-    window.location.reload()
+    clearStorage()
+    onLogout()
   }
 
   return (
-    <button onClick={handleLogout} className="bg-red-600 text-white px-4 py-2 rounded">
-      Cerrar sesión
+    <button
+      onClick={handleLogout}
+      className="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded ml-2"
+    >
+      Cerrar Sesión
     </button>
   )
 }

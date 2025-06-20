@@ -1,20 +1,19 @@
-import React, { useState } from 'react'
-
-import ObjectCard from './ObjectCard'
-import { getUsername } from '../utils/storage'
+// src/components/SearchResults.jsx
+import React from 'react'
+import ObjectCard from './ObjectCard.jsx'
+import { getUsername } from '../utils/storage.js'
 
 const SearchResults = ({ results, onDelete }) => {
-  const isAdmin = getUsername() === 'GUSTAVOPERALTA'
+  const currentUser = getUsername()
+  const isAdmin = currentUser === 'GUSTAVOPERALTA'
+
+  if (!Array.isArray(results)) return null
 
   return (
-    <div className="mt-6">
-      {results.length === 0 ? (
-        <p className="text-center text-gray-600">No se encontraron resultados.</p>
-      ) : (
-        results.map(obj => (
-          <ObjectCard key={obj._id} obj={obj} onDelete={onDelete} isAdmin={isAdmin} />
-        ))
-      )}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {results.map(obj => (
+        <ObjectCard key={obj._id} obj={obj} onDelete={onDelete} isAdmin={isAdmin} />
+      ))}
     </div>
   )
 }

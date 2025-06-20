@@ -15,7 +15,10 @@ const CreateUserForm = () => {
       const res = await fetch(`${API_URL}/api/users/create`, {
 
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${getToken()}`
+},
         body: JSON.stringify({
           username: username.toUpperCase(),
           legajo,
