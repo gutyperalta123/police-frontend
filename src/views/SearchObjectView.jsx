@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import SearchObjectForm from '../components/SearchObjectForm.jsx'
 import SearchResults from '../components/SearchResults.jsx'
-import LayoutHeader from '../components/LayoutHeader.jsx'
+import { getToken } from '../utils/storage.js'
 
 const SearchObjectView = () => {
   const [results, setResults] = useState([])
 
   const buscarObjetos = async query => {
     try {
-      const res = await fetch(`https://police-backend-dwup.onrender.com/api/objects/search?q=${query}`)
+      const res = await fetch(`https://police-backend-dwup.onrender.com/api/objects/search?q=${query}`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      })
       const data = await res.json()
-      setResults(data)
+      if (res.ok) {
+        setResults(data)
+      } else {
+        setResults([])
+      }
     } catch (err) {
       setResults([])
     }
@@ -21,7 +29,10 @@ const SearchObjectView = () => {
 
     try {
       const res = await fetch(`https://police-backend-dwup.onrender.com/api/objects/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
       })
 
       if (res.ok) {
@@ -33,13 +44,9 @@ const SearchObjectView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-900">
-      <LayoutHeader />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h2 className="text-2xl font-bold mb-6">Buscar Objeto</h2>
-        <SearchObjectForm onSearch={buscarObjetos} />
-        <SearchResults results={results} onDelete={eliminarObjeto} />
-      </div>
+    <div>
+      <SearchObjectForm onSearch={buscarObjetos} />
+      <SearchResults results={results} onDelete={eliminarObjeto} />
     </div>
   )
 }

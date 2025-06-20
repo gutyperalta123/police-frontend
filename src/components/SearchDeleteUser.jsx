@@ -1,26 +1,27 @@
 import React, { useState } from 'react'
+import { getToken } from '../utils/storage'
 
-import { API_URL } from '../utils/storage'
-
-const SearchDeleteUser = () => {
+const SearchDeleteUser = ({ update }) => {
   const [legajo, setLegajo] = useState('')
-  const [resultado, setResultado] = useState(null)
-  const [error, setError] = useState('')
+  const [mensaje, setMensaje] = useState('')
 
-  const handleSearch = async () => {
+  const handleDelete = async () => {
+    if (!window.confirm('¿Estás seguro de eliminar este usuario?')) return
     try {
-      const res = await fetch(`${API_URL}/api/users/${legajo}`)
-
+      const res = await fetch(`https://police-backend-dwup.onrender.com/api/users/${legajo}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      })
       if (res.ok) {
-        const data = await res.json()
-        setResultado(data)
-        setError('')
+        setMensaje('Usuario eliminado correctamente.')
+        setLegajo('')
       } else {
-        setResultado(null)
-        setError('Usuario no encontrado')
+        setMensaje('No se encontró el usuario o no se pudo eliminar.')
       }
     } catch (err) {
-      setError('Error al buscar')
+      setMensaje('Error de conexión con el servidor.')
     }
   }
 
@@ -28,24 +29,15 @@ const SearchDeleteUser = () => {
     <div className="space-y-2">
       <input
         type="text"
-        placeholder="Buscar usuario por legajo"
+        placeholder="Legajo del usuario"
         value={legajo}
         onChange={e => setLegajo(e.target.value)}
-        className="border p-2 rounded w-full"
+        className="w-full p-2 border border-gray-300 rounded"
       />
-      <button
-        onClick={handleSearch}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Buscar
+      <button onClick={handleDelete} className="bg-red-600 text-white py-2 px-4 rounded">
+        Eliminar Usuario
       </button>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      {resultado && (
-        <div className="mt-2 p-2 border rounded bg-gray-50">
-          <p><strong>Usuario:</strong> {resultado.username}</p>
-          <p><strong>Legajo:</strong> {resultado.legajo}</p>
-        </div>
-      )}
+      {mensaje && <p className="mt-2 text-sm">{mensaje}</p>}
     </div>
   )
 }

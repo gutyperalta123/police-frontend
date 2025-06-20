@@ -1,25 +1,25 @@
 const TOKEN_KEY = 'token'
-const USER_KEY = 'user'
+const USERNAME_KEY = 'username'
 
-export const saveToken = token => {
+export const API_URL = 'https://police-backend-dwup.onrender.com/api'
+
+export function saveToken(token) {
   localStorage.setItem(TOKEN_KEY, token)
 }
 
-export const getToken = () => {
+export function getToken() {
   return localStorage.getItem(TOKEN_KEY)
 }
 
-export const saveUser = username => {
-  localStorage.setItem(USER_KEY, username)
+export function saveUser(username) {
+  localStorage.setItem(USERNAME_KEY, username)
 }
 
-export const getUser = () => {
-  return localStorage.getItem(USER_KEY)
+export function getUsername() {
+  return localStorage.getItem(USERNAME_KEY)
 }
 
-export const clearStorage = () => {
+export function clearStorage() {
   localStorage.removeItem(TOKEN_KEY)
-  localStorage.removeItem(USER_KEY)
+  localStorage.removeItem(USERNAME_KEY)
 }
-
-export const API_URL = 'https://police-backend-dwup.onrender.com'

@@ -1,51 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Login from './Login.jsx'
-import AdminPanelView from './views/AdminPanelView.jsx'
 import AddObjectView from './views/AddObjectView.jsx'
 import SearchObjectView from './views/SearchObjectView.jsx'
+import AdminPanelView from './views/AdminPanelView.jsx'
 import DeleteUserView from './views/DeleteUserView.jsx'
 import LogoutButton from './components/LogoutButton.jsx'
 import { getToken, getUsername } from './utils/storage.js'
 
 const App = () => {
-  const [token, setToken] = useState('')
-  const [username, setUsername] = useState('')
+  const [token, setToken] = useState(getToken())
   const [view, setView] = useState('add')
 
-  useEffect(() => {
-    const storedToken = getToken()
-    const storedUsername = getUsername()
-    if (storedToken && storedUsername) {
-      setToken(storedToken)
-      setUsername(storedUsername)
-    }
-  }, [])
+  const username = getUsername()
 
-  if (!token) return <Login onLogin={(t, u) => { setToken(t); setUsername(u) }} />
+  useEffect(() => {
+    setToken(getToken())
+  }, [])
 
   const isAdmin = username === 'GUSTAVOPERALTA'
 
+  if (!token) {
+    return <Login onLogin={() => setToken(getToken())} />
+  }
+
   return (
-    <div className='p-4 max-w-4xl mx-auto'>
-      <header className='mb-4 flex justify-between items-center'>
-        <h1 className='text-2xl font-bold'>Datos Policiales</h1>
-        <LogoutButton onLogout={() => { setToken(''); setUsername('') }} />
+    <div>
+      <header className="bg-gray-900 text-white p-4 flex justify-between">
+        <h1 className="text-xl font-bold">APLICACIÓN POLICIAL</h1>
+        <div className="flex items-center gap-2">
+          <span className="font-bold">{username}</span>
+          <LogoutButton onLogout={() => setToken(null)} />
+        </div>
       </header>
-      <nav className='mb-4 flex gap-2'>
-        <button onClick={() => setView('add')} className='btn'>Agregar Objeto</button>
-        <button onClick={() => setView('search')} className='btn'>Buscar / Eliminar Objeto</button>
+
+      <div className="p-4 flex flex-wrap gap-2">
+        <button className="btn-blue" onClick={() => setView('add')}>Agregar objeto</button>
+        <button className="btn-green" onClick={() => setView('search')}>Buscar / Eliminar</button>
         {isAdmin && (
           <>
-            <button onClick={() => setView('admin')} className='btn'>Crear Usuario</button>
-            <button onClick={() => setView('deleteuser')} className='btn'>Eliminar Usuario</button>
+            <button className="btn-purple" onClick={() => setView('admin')}>Administrar usuarios</button>
+            <button className="btn-red" onClick={() => setView('deleteUser')}>Eliminar usuarios</button>
           </>
         )}
-      </nav>
-      <main>
+      </div>
+
+      <main className="p-4">
         {view === 'add' && <AddObjectView />}
         {view === 'search' && <SearchObjectView />}
         {view === 'admin' && isAdmin && <AdminPanelView />}
-        {view === 'deleteuser' && isAdmin && <DeleteUserView />}
+        {view === 'deleteUser' && isAdmin && <DeleteUserView />}
       </main>
     </div>
   )

@@ -1,22 +1,14 @@
 import React from 'react'
 import ObjectCard from './ObjectCard.jsx'
-import { getUser } from '../utils/storage.js'
+import { getUsername } from '../utils/storage'
 
 const SearchResults = ({ results, onDelete }) => {
-  const isAdmin = getUser() === 'GUSTAVOPERALTA'
-
-  if (!results || results.length === 0) {
-    return <p className="text-center mt-4">No se encontraron resultados.</p>
-  }
+  const isAdmin = getUsername() === 'GUSTAVOPERALTA'
 
   return (
-    <div className="mt-4">
-      {results.map(objeto => (
-        <ObjectCard
-          key={objeto._id}
-          objeto={objeto}
-          onDelete={isAdmin ? onDelete : null}
-        />
+    <div className="mt-4 space-y-4">
+      {results.map(obj => (
+        <ObjectCard key={obj._id} objeto={obj} onDelete={isAdmin ? onDelete : null} />
       ))}
     </div>
   )

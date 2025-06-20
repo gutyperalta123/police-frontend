@@ -1,88 +1,91 @@
 import React, { useState } from 'react'
-import { getToken, API_URL } from '../utils/storage'
+import { getToken } from '../utils/storage'
 
 const AddObjectForm = () => {
-  const [mensaje, setMensaje] = useState('')
-  const [form, setForm] = useState({
-    comisaria: '',
-    tipo: '',
-    numero_serie: '',
-    imei: '',
-    marca: '',
-    modelo: '',
-    color: '',
-    numero_motor: '',
-    numero_cuadro: '',
-    numero_dominio: '',
-    caracteristicas: '',
-    denunciante: '',
-    dni_denunciante: '',
-    fiscal: '',
-    descripcion: ''
+  const [formData, setFormData] = useState({
+    COMISARIA: '',
+    TIPO: '',
+    NUMERO_SERIE: '',
+    IMEI: '',
+    MARCA: '',
+    MODELO: '',
+    COLOR: '',
+    NUMERO_MOTOR: '',
+    NUMERO_CUADRO: '',
+    NUMERO_DOMINIO: '',
+    CARACTERISTICAS: '',
+    DENUNCIANTE: '',
+    DNI_DENUNCIANTE: '',
+    FISCAL: '',
+    DESCRIPCION: ''
   })
 
-  const handleChange = (e) => {
+  const [mensaje, setMensaje] = useState('')
+
+  const handleChange = e => {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value.toUpperCase() }))
+    setFormData(prev => ({
+      ...prev,
+      [name]: value.toUpperCase()
+    }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault()
-
     try {
-      const res = await fetch(`${API_URL}/api/objects`, {
+      const res = await fetch('https://police-backend-dwup.onrender.com/api/objects', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${getToken()}`
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify(formData)
       })
 
-      if (!res.ok) {
-        throw new Error('Error al guardar el objeto')
+      if (res.ok) {
+        setMensaje('Objeto registrado correctamente.')
+        setFormData({
+          COMISARIA: '',
+          TIPO: '',
+          NUMERO_SERIE: '',
+          IMEI: '',
+          MARCA: '',
+          MODELO: '',
+          COLOR: '',
+          NUMERO_MOTOR: '',
+          NUMERO_CUADRO: '',
+          NUMERO_DOMINIO: '',
+          CARACTERISTICAS: '',
+          DENUNCIANTE: '',
+          DNI_DENUNCIANTE: '',
+          FISCAL: '',
+          DESCRIPCION: ''
+        })
+      } else {
+        setMensaje('Error al registrar el objeto.')
       }
-
-      setMensaje('Objeto guardado con éxito')
-      setForm({
-        comisaria: '',
-        tipo: '',
-        numero_serie: '',
-        imei: '',
-        marca: '',
-        modelo: '',
-        color: '',
-        numero_motor: '',
-        numero_cuadro: '',
-        numero_dominio: '',
-        caracteristicas: '',
-        denunciante: '',
-        dni_denunciante: '',
-        fiscal: '',
-        descripcion: ''
-      })
     } catch (err) {
-      setMensaje('No se pudo guardar el objeto')
+      setMensaje('Error de conexión con el servidor.')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">
-      <h2 className="text-lg font-bold mb-2">Registrar Objeto</h2>
-      {Object.keys(form).map((key) => (
-        <input
-          key={key}
-          type="text"
-          name={key}
-          value={form[key]}
-          placeholder={key.replace(/_/g, ' ').toUpperCase()}
-          onChange={handleChange}
-          className="w-full mb-2 p-2 border rounded"
-          required
-        />
+    <form onSubmit={handleSubmit} className="space-y-2">
+      {Object.keys(formData).map(key => (
+        <div key={key}>
+          <input
+            type="text"
+            name={key}
+            placeholder={key}
+            value={formData[key]}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
       ))}
-      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-        Guardar
+      <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">
+        Registrar
       </button>
       {mensaje && <p className="mt-2 text-sm">{mensaje}</p>}
     </form>
