@@ -1,26 +1,21 @@
 import React from 'react'
 import CreateUserForm from '../components/CreateUserForm.jsx'
-import DeleteUserForm from '../components/DeleteUserForm.jsx'
 import SearchDeleteUser from '../components/SearchDeleteUser.jsx'
-
 
 const AdminPanelView = () => {
   return (
-    <div className="space-y-6">
-      <section>
-        <h2 className="text-lg font-semibold mb-2">Crear nuevo usuario</h2>
+    <div className="p-4">
+      <h2 className="text-2xl font-bold mb-6 text-center">Panel de Administración</h2>
+      
+      <div className="mb-8">
+        <h3 className="text-lg font-semibold mb-2 text-center">Crear Nuevo Usuario</h3>
         <CreateUserForm />
-      </section>
+      </div>
 
-      <section>
-        <h2 className="text-lg font-semibold mb-2">Eliminar usuario por legajo</h2>
-        <DeleteUserForm />
-      </section>
-
-      <section>
-        <h2 className="text-lg font-semibold mb-2">Buscar usuarios</h2>
+      <div>
+        <h3 className="text-lg font-semibold mb-2 text-center">Buscar y Eliminar Usuario</h3>
         <SearchDeleteUser />
-      </section>
+      </div>
     </div>
   )
 }

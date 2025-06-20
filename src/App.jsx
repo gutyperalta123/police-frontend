@@ -1,67 +1,58 @@
 import React, { useState, useEffect } from 'react'
-import Login from './Login'
+import Login from './Login.jsx'
 import AddObjectView from './views/AddObjectView.jsx'
-import SearchObjectView from "./views/SearchObjectView"
+import SearchObjectView from './views/SearchObjectView.jsx'
 import AdminPanelView from './views/AdminPanelView.jsx'
-import DeleteUserView from "./views/DeleteUserView.jsx"
-import { getToken, getUsername } from './utils/storage'
+import { getToken, getUsername } from './utils/storage.js'
 
-const App = () => {
-  const [token, setToken] = useState(getToken())
-  const [username, setUsername] = useState(getUsername())
-  const [vista, setVista] = useState('agregar')
-
-  const isAdmin = username === 'GUSTAVOPERALTA'
+function App() {
+  const [token, setToken] = useState(null)
+  const [username, setUsername] = useState('')
 
   useEffect(() => {
-    setToken(getToken())
-    setUsername(getUsername())
+    const savedToken = getToken()
+    const savedUsername = getUsername()
+    if (savedToken) {
+      setToken(savedToken)
+      setUsername(savedUsername)
+    }
   }, [])
 
-  if (!token) return <Login onLogin={setToken} />
+  const handleLogin = (token) => {
+    setToken(token)
+    setUsername(getUsername())
+  }
+
+  const handleLogout = () => {
+    setToken(null)
+    setUsername('')
+    localStorage.clear()
+  }
+
+  if (!token) {
+    return <Login onLogin={handleLogin} />
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">APLICACIÓN POLICIAL</h1>
-        <p className="font-semibold">{username}</p>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl mb-4 font-bold">APLICACIÓN POLICIAL</h1>
+      <div className="mb-4">
+        <span className="font-semibold">{username}</span>
+        <button onClick={handleLogout} className="ml-4 px-4 py-1 bg-red-500 text-white rounded">Cerrar sesión</button>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        <button
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          onClick={() => setVista('agregar')}
-        >
-          Agregar objeto
-        </button>
-        <button
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-          onClick={() => setVista('buscar')}
-        >
-          Buscar / Eliminar
-        </button>
-        {isAdmin && (
-          <button
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-            onClick={() => setVista('admin')}
-          >
-            Administrar usuarios
-          </button>
-        )}
-        <button
-          onClick={() => {
-            localStorage.clear()
-            window.location.reload()
-          }}
-          className="ml-auto bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Cerrar sesión
-        </button>
+      <div className="section">
+        <AddObjectView />
+      </div>
+      <div className="section">
+        <SearchObjectView username={username} />
       </div>
 
-      {vista === 'agregar' && <AddObjectView />}
-      {vista === 'buscar' && <SearchObjectView />}
-      {vista === 'admin' && isAdmin && <AdminPanelView />}
+      {username === 'GUSTAVOPERALTA' && (
+        <div className="section">
+          <AdminPanelView />
+        </div>
+      )}
     </div>
   )
 }

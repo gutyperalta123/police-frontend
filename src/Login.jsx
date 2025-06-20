@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-
-import { API_URL } from '../utils/storage'
+import { saveToken, saveUsername } from './utils/storage.js'
 
 const Login = ({ onLogin }) => {
   const [username, setUsername] = useState('')
@@ -11,8 +10,7 @@ const Login = ({ onLogin }) => {
     e.preventDefault()
 
     try {
-      const res = await fetch(`${API_URL}/api/users/login`, {
-
+      const res = await fetch('https://police-backend-dwup.onrender.com/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -28,36 +26,34 @@ const Login = ({ onLogin }) => {
         setError(data.msg || 'Error al iniciar sesión')
       }
     } catch (err) {
-      setError('Failed to fetch')
+      setError('Error de conexión')
     }
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
-      >
-        <h2 className="text-xl font-bold mb-4">Iniciar sesión</h2>
-        {error && <p className="text-red-600 mb-2">{error}</p>}
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar sesión</h2>
+
+        {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
+
         <input
           type="text"
-          placeholder="Usuario"
+          placeholder="USUARIO"
           value={username}
           onChange={e => setUsername(e.target.value)}
-          className="border p-2 w-full mb-2 rounded"
+          className="w-full px-4 py-2 mb-4 border rounded"
+          required
         />
         <input
           type="password"
-          placeholder="Contraseña"
+          placeholder="CONTRASEÑA"
           value={password}
           onChange={e => setPassword(e.target.value)}
-          className="border p-2 w-full mb-4 rounded"
+          className="w-full px-4 py-2 mb-4 border rounded"
+          required
         />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-        >
+        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded transition duration-300">
           Entrar
         </button>
       </form>

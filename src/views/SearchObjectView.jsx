@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import SearchObjectForm from '../components/SearchObjectForm.jsx'
 import SearchResults from '../components/SearchResults.jsx'
+import LayoutHeader from '../components/LayoutHeader.jsx'
 
 const SearchObjectView = () => {
   const [results, setResults] = useState([])
@@ -32,9 +33,13 @@ const SearchObjectView = () => {
   }
 
   return (
-    <div>
-      <SearchObjectForm onSearch={buscarObjetos} />
-      <SearchResults results={results} onDelete={eliminarObjeto} />
+    <div className="min-h-screen bg-gray-100 text-gray-900">
+      <LayoutHeader />
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold mb-6">Buscar Objeto</h2>
+        <SearchObjectForm onSearch={buscarObjetos} />
+        <SearchResults results={results} onDelete={eliminarObjeto} />
+      </div>
     </div>
   )
 }
