@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DeleteUserForm from '../components/DeleteUserForm.jsx'
 
 const DeleteUserView = () => {

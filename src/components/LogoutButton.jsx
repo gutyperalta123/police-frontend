@@ -1,3 +1,5 @@
+import React, { useState } from 'react'
+
 import { clearSession } from '../utils/storage'
 
 const LogoutButton = () => {
