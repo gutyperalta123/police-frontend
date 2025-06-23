@@ -1,17 +1,17 @@
 const TOKEN_KEY = 'token'
 
-// URL base del backend
 export const API_URL = 'https://police-backend-dwup.onrender.com/api'
+
 export const saveToken = (token) => {
-  localStorage.setItem('token', token)
+  localStorage.setItem(TOKEN_KEY, token)
 }
 
 export const getToken = () => {
-  return localStorage.getItem('token')
+  return localStorage.getItem(TOKEN_KEY)
 }
 
 export const removeToken = () => {
-  localStorage.removeItem('token')
+  localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem('user')
 }
 
@@ -30,4 +30,9 @@ export const getUserFromToken = () => {
     console.error('Error al decodificar token:', error)
     return null
   }
+}
+
+export const getUser = () => {
+  const user = localStorage.getItem('user')
+  return user ? JSON.parse(user) : null
 }
