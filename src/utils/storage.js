@@ -2,40 +2,32 @@ const TOKEN_KEY = 'token'
 
 // URL base del backend
 export const API_URL = 'https://police-backend-dwup.onrender.com/api'
-
-// Guardar token JWT
-export function saveToken(token) {
-  localStorage.setItem(TOKEN_KEY, token)
+export const saveToken = (token) => {
+  localStorage.setItem('token', token)
 }
 
-// Obtener token JWT
-export function getToken() {
-  return localStorage.getItem(TOKEN_KEY)
+export const getToken = () => {
+  return localStorage.getItem('token')
 }
 
-// Eliminar token JWT
-export function removeToken() {
-  localStorage.removeItem(TOKEN_KEY)
+export const removeToken = () => {
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
 }
 
-// Limpiar completamente el almacenamiento local
-export function clearStorage() {
-  localStorage.removeItem(TOKEN_KEY)
+export const saveUser = (user) => {
+  localStorage.setItem('user', JSON.stringify(user))
 }
 
-// Obtener el usuario decodificado desde el token JWT
-export function getUserFromToken() {
+export const getUserFromToken = () => {
   const token = getToken()
   if (!token) return null
 
   try {
     const payload = JSON.parse(atob(token.split('.')[1]))
-    return payload // Contiene username, role, etc.
+    return payload
   } catch (error) {
     console.error('Error al decodificar token:', error)
     return null
   }
 }
-
-// Alias útil para acceder al usuario completo
-export const getUser = () => getUserFromToken()
